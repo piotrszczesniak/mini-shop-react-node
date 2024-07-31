@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 app.use(cors());
+app.use(express.json());
 
 const { resolve } = require('path');
 // Replace if using a different env file or config
@@ -18,6 +19,12 @@ app.get('/', (req, res) => {
   res.sendFile(path);
 });
 
+app.post('/test', async (req, res) => {
+  const { name, age } = req.body;
+  console.log(req.body);
+  res.send(`Received data - Name: ${name}, Age: ${age}`);
+});
+
 app.get('/config', (req, res) => {
   res.send({
     publishableKey: process.env.STRIPE_PUBLISHABLE_KEY,
@@ -25,10 +32,12 @@ app.get('/config', (req, res) => {
 });
 
 app.post('/create-payment-intent', async (req, res) => {
+  const { amount } = req.body;
+
   try {
     const paymentIntent = await stripe.paymentIntents.create({
       currency: 'EUR',
-      amount: 1999,
+      amount: amount,
       automatic_payment_methods: { enabled: true },
     });
 

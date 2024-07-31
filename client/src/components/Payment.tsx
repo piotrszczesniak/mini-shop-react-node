@@ -29,7 +29,12 @@ const Payment = () => {
           'http://localhost:5252/create-payment-intent',
           {
             method: 'POST',
-            body: JSON.stringify({}),
+            headers: {
+              'Content-type': 'application/json',
+            },
+            body: JSON.stringify({
+              amount: 2000,
+            }),
           }
         );
         const { clientSecret } = await response.json();
